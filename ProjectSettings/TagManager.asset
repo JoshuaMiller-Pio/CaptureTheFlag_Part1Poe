@@ -11,6 +11,7 @@ TagManager:
   - AI
   - Red_Base
   - Blue_Base
+  - bullet
   layers:
   - Default
   - TransparentFX
