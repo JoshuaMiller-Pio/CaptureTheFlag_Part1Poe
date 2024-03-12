@@ -9,14 +9,7 @@
   pistol idle
   pistol shoot
   
-  zlorp - character
-  sitting angry
-  sitting clap below shoulders
-  sitting clap up high
-  sitting yell
-  sitting disbelief
-  cheering while sitting
-  standing clap
+
   
   Worrok W Kurniawan - character
   cheering
