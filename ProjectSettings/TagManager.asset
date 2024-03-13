@@ -12,6 +12,7 @@ TagManager:
   - Red_Base
   - Blue_Base
   - bullet
+  - health
   layers:
   - Default
   - TransparentFX

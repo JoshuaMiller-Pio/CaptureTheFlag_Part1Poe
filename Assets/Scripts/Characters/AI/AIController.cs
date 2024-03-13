@@ -69,7 +69,24 @@ public class AIController : CharacterSuper
     //checks to see if player is within range and switches to chase mode
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.tag == "bullet")
+        {
+            Health -= Damage;
+            Debug.Log("Shot");
+            
+        }
+        Debug.Log("touch");
         
+        if (other.gameObject.tag == "health")
+        {
+            Health = MaxHealth;
+
+        }
+        
+        if (Health <= 0)
+        {
+            Death();
+        }
         if (other.gameObject.tag == "Player")
         {
           //  currentState = FiniteStateMachine.Chase;
@@ -98,16 +115,8 @@ public class AIController : CharacterSuper
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "bullet")
-        {
-            Health -= Damage;
-            Debug.Log("Shot");
-            
-        }
-
-        if (Health <= 0)
-        {
-            Death();
-        }
+      
     }
+    
+    
 }
