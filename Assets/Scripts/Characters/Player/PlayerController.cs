@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : CharacterSuper
@@ -10,6 +11,7 @@ public class PlayerController : CharacterSuper
         [SerializeField] private float speed = 13;
         [SerializeField]private LayerMask ground;
         [SerializeField]private GameObject spawn,BulletSpawn, Bullet;
+        [SerializeField]private TextMeshProUGUI _healthDisplay;
         
         private Vector3 _velocity;
         private bool _grounded;
@@ -20,7 +22,6 @@ public class PlayerController : CharacterSuper
 
     private void Start()
     {
-        Screen.lockCursor = true;
         canShoot = true;
     }
 
@@ -69,16 +70,31 @@ public class PlayerController : CharacterSuper
     
     public override void Death()
     {
+        _controller.enabled = false;
         gameObject.transform.position = spawn.transform.position;
+        
         Health = MaxHealth;
+
+        _healthDisplay.text = Health.ToString();
+        _controller.enabled = true;
+
     }
 
-    private void OnCollisionEnter(Collision other)
+
+
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "bullet")
         {
             Health -= Damage;
-            
+            _healthDisplay.text = Health.ToString();
+
+        }
+        if (other.gameObject.tag == "health")
+        {
+            Health = MaxHealth;
+            _healthDisplay.text = Health.ToString();
+
         }
 
         if (Health <= 0)

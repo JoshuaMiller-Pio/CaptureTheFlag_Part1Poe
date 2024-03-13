@@ -2,16 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
     private int Ppoints = 0, Apoints = 0;
     public TextMeshProUGUI Blue = null,Red = null;
+    private bool _paused;
 
+    public bool Paused
+    {
+        get => _paused;
+        set => _paused = value;
+    }
     
     // Start is called before the first frame update
     void Start()
     {
+        Screen.lockCursor = true;
+
     }
     
     // Update is called once per frame
@@ -50,4 +59,28 @@ public class GameManager : Singleton<GameManager>
         Red.text = Apoints.ToString();
         WinLose();
     }
+
+
+
+    #region GameControls
+
+        
+        public void Play()
+        {
+            SceneManager.LoadScene(1);
+        }
+
+        public void Restart()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        }
+
+        public void Quit()
+        {
+            Application.Quit();
+
+        }
+
+    #endregion
 }
