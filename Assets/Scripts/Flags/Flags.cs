@@ -60,9 +60,13 @@ public abstract class Flags : MonoBehaviour
             IsAtBase = isAtBase;
         }
 #endregion
-    
-    
-    private void Update()
+
+
+private void Start()
+{
+}
+
+private void Update()
     {
 
         if (_isPickedup)
@@ -89,6 +93,13 @@ public abstract class Flags : MonoBehaviour
             _isPickedup = true;
             OnflagPickedUp?.Invoke(this, EventArgs.Empty);
             _holder = other.gameObject;
+            if (_holder.tag == "Player")
+            {
+               PlayerController PC = _holder.GetComponent<PlayerController>();
+               PC.Flagdropped += drop;
+            }
+
+            
             
         }
 
@@ -118,6 +129,12 @@ public abstract class Flags : MonoBehaviour
             Respawn();
         }
      
+    }
+
+    public void drop(object sender, EventArgs e)
+    {
+        transform.position = _holder.transform.position;
+        _isPickedup = false;
     }
 
     public abstract void Respawn();

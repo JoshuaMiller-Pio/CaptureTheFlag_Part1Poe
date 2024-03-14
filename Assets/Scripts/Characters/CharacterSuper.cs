@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ public abstract class CharacterSuper : MonoBehaviour
     private int _health;
     private int _maxHealth = 10;
     private int _damage;
-
+    public EventHandler Flagdropped;
     public int MaxHealth
     {
         get => _maxHealth;

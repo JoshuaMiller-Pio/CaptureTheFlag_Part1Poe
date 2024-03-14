@@ -12,6 +12,9 @@ public class PlayerController : CharacterSuper
         [SerializeField]private LayerMask ground;
         [SerializeField]private GameObject spawn,BulletSpawn, Bullet;
         [SerializeField]private TextMeshProUGUI _healthDisplay;
+
+        
+        
         
         private Vector3 _velocity;
         private bool _grounded;
@@ -70,13 +73,15 @@ public class PlayerController : CharacterSuper
     
     public override void Death()
     {
+        Flagdropped?.Invoke(this, EventArgs.Empty);
         _controller.enabled = false;
         gameObject.transform.position = spawn.transform.position;
         
         Health = MaxHealth;
-
+        
         _healthDisplay.text = Health.ToString();
         _controller.enabled = true;
+        
 
     }
 

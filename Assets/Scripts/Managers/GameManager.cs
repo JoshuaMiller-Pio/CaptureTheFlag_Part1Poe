@@ -8,12 +8,17 @@ public class GameManager : Singleton<GameManager>
 {
     private int Ppoints = 0, Apoints = 0;
     public TextMeshProUGUI Blue = null,Red = null;
-    private bool _paused;
+    private bool _paused, _gameStart;
 
     public bool Paused
     {
         get => _paused;
         set => _paused = value;
+    } 
+    public bool GameStart
+    {
+        get => _gameStart;
+        set => _gameStart = value;
     }
     
     // Start is called before the first frame update
