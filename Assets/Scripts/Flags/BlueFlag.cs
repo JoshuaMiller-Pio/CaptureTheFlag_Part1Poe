@@ -16,7 +16,6 @@ public class BlueFlag : Flags
         Restricted = Restriction;
         IsAtBase = true;
         Spawnlocation = Spawn.transform.position;
-        Debug.Log(Spawn);
 
     }
 

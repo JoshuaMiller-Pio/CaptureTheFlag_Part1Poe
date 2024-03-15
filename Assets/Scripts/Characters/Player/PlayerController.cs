@@ -12,7 +12,7 @@ public class PlayerController : CharacterSuper
         [SerializeField]private LayerMask ground;
         [SerializeField]private GameObject spawn,BulletSpawn, Bullet;
         [SerializeField]private TextMeshProUGUI _healthDisplay;
-
+        public EventHandler inEnemyBase;
         
         
         
@@ -102,9 +102,22 @@ public class PlayerController : CharacterSuper
 
         }
 
+        if (other.tag == "Red_Base")
+        {
+            inEnemyBase?.Invoke(this, EventArgs.Empty);
+        }
         if (Health <= 0)
         {
             Death();
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Red_Base")
+        {
+            inEnemyBase?.Invoke(this, EventArgs.Empty);
+        }
+        
     }
 }

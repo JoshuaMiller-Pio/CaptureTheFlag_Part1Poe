@@ -5,11 +5,21 @@ using UnityEngine;
 using UnityEngine.AI;
 public class AIController : CharacterSuper
 {
-    private FiniteStateMachine currentState;
-    private NavMeshAgent agent;
-    public GameObject player, spawn,BulletSpawn, Bullet;
-    private bool _canShoot = true, _inBase = true;
-    private float timer = 5;
+    #region Declarations
+
+        private FiniteStateMachine currentState;
+        private NavMeshAgent agent;
+        public GameObject player, spawn,BulletSpawn, Bullet;
+        private bool _canShoot = true, _inBase = true, _enemyinBase = false ,_ismoving;
+
+        private float timer = 2;
+        
+    #endregion
+    
+    
+    
+    
+    
     public enum FiniteStateMachine
     {
       Idle, //used at round start and end to keep AI stationary.
@@ -23,6 +33,7 @@ public class AIController : CharacterSuper
     // Start is called before the first frame update
     void Start()
     {
+        player.GetComponent<PlayerController>().inEnemyBase += enemyCheck;
         currentState = FiniteStateMachine.Idle;
          agent = gameObject.GetComponent<NavMeshAgent>();
          
@@ -31,7 +42,17 @@ public class AIController : CharacterSuper
     // Update is called once per frame
     void Update()
     {
+      
         
+        
+        if (agent.hasPath)
+        {
+            _ismoving = true;
+        }
+        else
+        {
+            _ismoving = false;
+        }
         Debug.Log(currentState);
         
         
@@ -70,12 +91,47 @@ public class AIController : CharacterSuper
     
     public void defend()
     {
-        //TODO
-        //add distance on the x and z so he doesnt run into 
-        if (DistanceToPlayer() > 3)
+        if (_enemyinBase && _inBase)
         {
-           float random = Random.Range(-3, 3);
-         agent.SetDestination(new Vector3(player.transform.position.x + random,player.transform.position.y,player.transform.position.z +random));
+            if (DistanceToPlayer() > 3)
+            {
+                Debug.Log("moving");
+                move();
+                
+            }
+            
+            //looks at player
+            gameObject.transform.LookAt(player.transform.position);
+            //if reload time has been satisfied allows shooting
+            if (_canShoot)
+            {
+                StartCoroutine(shoot());
+                _canShoot = false;
+
+            }
+
+        }
+        
+      //  if (!_enemyinBase  || !_inBase)
+       // {
+      //      currentState = FiniteStateMachine.Attack;
+     //   }
+        
+        
+        
+        
+        /*
+        if (DistanceToPlayer() > 3.5f && DistanceToPlayer() < 10f)
+        {
+            move();
+            if ((timer  - 1) ==0)
+            {
+                move();
+            }
+            
+        }
+        else if(DistanceToPlayer() > 10 && )
+        {
             
         }
         gameObject.transform.LookAt(player.transform.position);
@@ -83,18 +139,30 @@ public class AIController : CharacterSuper
         {
             StartCoroutine(shoot());
             _canShoot = false;
-        }
+        }*/
     }
 
 
+
+    private void enemyCheck(object sender, EventArgs e)
+    {
+        if (_enemyinBase) _enemyinBase = false;
+        else _enemyinBase = true;
+    }
+    private void move()
+    {
+        float randomx = Random.Range(-3.5f, 3.5f);
+        float randomz = Random.Range(-3.5f, 3.5f);
+        agent.SetDestination(new Vector3(player.transform.position.x ,player.transform.position.y,player.transform.position.z ));
+    }
+    
   
     private IEnumerator shoot()
     {
         GameObject spawnedBullet = Instantiate(Bullet,BulletSpawn.transform.position, Quaternion.identity);
-        spawnedBullet.GetComponent<Rigidbody>().AddForce(-BulletSpawn.transform.forward*10, ForceMode.Impulse);
+        spawnedBullet.GetComponent<Rigidbody>().AddForce(-BulletSpawn.transform.forward*50, ForceMode.Impulse);
         yield return new WaitForSeconds(timer);
         _canShoot = true;
-        Debug.Log("Shoot");
 
         yield return null;
     }
@@ -121,10 +189,8 @@ public class AIController : CharacterSuper
         if (other.gameObject.tag == "bullet")
         {
             Health -= Damage;
-            Debug.Log("Shot");
             
         }
-        Debug.Log("touch");
         
         if (other.gameObject.tag == "health")
         {
@@ -158,7 +224,7 @@ public class AIController : CharacterSuper
             }
         }    }
 
-    //used to calculate the distance to the player
+    //used to calculate the distance to an object
     private float DistanceToObject(float x1, float x2, float y1, float y2)
     {
         float distance = (float)Math.Sqrt(Math.Pow((x2-x1),2) + Math.Pow((y2-y1),2)) ;
