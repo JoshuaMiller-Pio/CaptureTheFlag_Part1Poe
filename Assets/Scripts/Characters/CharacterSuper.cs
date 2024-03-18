@@ -24,8 +24,15 @@ public abstract class CharacterSuper : MonoBehaviour
         set => _damage = value;
     }
 
-    
-    
+
+    public void damage()
+    {
+        Health -= Damage;
+        if (Health <= 0)
+        {
+            Death();
+        } 
+    }
     
     
     private void Awake()

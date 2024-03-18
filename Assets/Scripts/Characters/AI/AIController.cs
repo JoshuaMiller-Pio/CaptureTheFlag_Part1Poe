@@ -45,7 +45,7 @@ public class AIController : CharacterSuper
       
         
         
-        if (agent.hasPath)
+        if (agent.remainingDistance>0.1f)
         {
             _ismoving = true;
         }
@@ -93,7 +93,7 @@ public class AIController : CharacterSuper
     {
         if (_enemyinBase && _inBase)
         {
-            if (DistanceToPlayer() > 3)
+            if (DistanceToPlayer() > 3 && !_ismoving)
             {
                 Debug.Log("moving");
                 move();
@@ -186,22 +186,14 @@ public class AIController : CharacterSuper
             }
         }
         
-        if (other.gameObject.tag == "bullet")
-        {
-            Health -= Damage;
-            
-        }
+       
         
         if (other.gameObject.tag == "health")
         {
             Health = MaxHealth;
-
         }
         
-        if (Health <= 0)
-        {
-            Death();
-        } 
+       
     }
 
     private void OnTriggerExit(Collider other)
@@ -246,7 +238,11 @@ public class AIController : CharacterSuper
         
     }
 
- 
-    
-    
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "bullet")
+        {
+            damage();
+        }
+    }
 }

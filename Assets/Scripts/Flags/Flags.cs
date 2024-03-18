@@ -12,7 +12,7 @@ public abstract class Flags : MonoBehaviour
         private bool _isPickedup = false;
         private bool _isAtBase = true;
         private Vector3 _spawnLocation;
-        private GameObject _restricted,_holder;
+        private GameObject _restricted,_holder=null;
         
 
     #endregion
@@ -79,7 +79,9 @@ private void Update()
     private void OnTriggerEnter(Collider other)
     {
         
-        if(_isAtBase && other.gameObject != Restricted)
+        
+        
+        if(_isAtBase && other.gameObject != Restricted && other.gameObject.tag != "Blue_Base" && other.gameObject.tag != "Red_Base" && other.gameObject.tag != "bullet")
         {
             _isAtBase = false;
             _holder = other.gameObject;
@@ -88,7 +90,7 @@ private void Update()
             //fires flag pick up event
           OnflagPickedUp?.Invoke(this, EventArgs.Empty);
         }
-        else if(!_isAtBase && !_isPickedup && (other.tag == "Player" || other.tag == "AI"))
+        else if(!_isAtBase && !_isPickedup && (other.tag == "Player" || other.tag == "AI") && (other.gameObject.tag != "Blue_Base" || other.gameObject.tag != "Red_Base") && other.gameObject.tag != "bullet")
         {
             _isPickedup = true;
             OnflagPickedUp?.Invoke(this, EventArgs.Empty);
@@ -103,31 +105,35 @@ private void Update()
             
         }
 
-        if (other.tag == "Red_Base" && _holder.tag == "AI" && gameObject.tag == "Flag_Red")
+        //if there is a holder then a point can be awarded
+        if (_holder!= null)
         {
-            _isPickedup = false;
-            Debug.Log("HERES");
-            GameManager.Instance.setApoints();
-            Respawn();
-        }
-        else if(other.tag == "Red_Base"&& _holder.tag == "AI" && gameObject.tag == "Flag_Blue")
-        {
-            _isPickedup = false;
+            if (other.tag == "Red_Base" && _holder.tag == "AI" && gameObject.tag == "Flag_Red")
+            {
+                _isPickedup = false;
+                GameManager.Instance.setApoints();
+                Respawn();
+            }
+            else if(other.tag == "Red_Base"&& _holder.tag == "AI" && gameObject.tag == "Flag_Blue")
+            {
+                _isPickedup = false;
 
-            Respawn();
-        }
-        if (other.tag == "Blue_Base" && _holder.tag == "Player" && gameObject.tag == "Flag_Blue")
-        {
-            _isPickedup = false;
-            Respawn();
-            GameManager.Instance.setPpoints();
-        }
-        else if(other.tag == "Blue_Base"&& _holder.tag == "Player" && gameObject.tag == "Flag_Red")
-        {
-            _isPickedup = false;
+                Respawn();
+            }
+            if (other.tag == "Blue_Base" && _holder.tag == "Player" && gameObject.tag == "Flag_Blue")
+            {
+                _isPickedup = false;
+                Respawn();
+                GameManager.Instance.setPpoints();
+            }
+            else if(other.tag == "Blue_Base"&& _holder.tag == "Player" && gameObject.tag == "Flag_Red")
+            {
+                _isPickedup = false;
 
-            Respawn();
+                Respawn();
+            }
         }
+       
      
     }
 

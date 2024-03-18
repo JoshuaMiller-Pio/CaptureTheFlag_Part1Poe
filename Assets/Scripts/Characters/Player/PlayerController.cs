@@ -89,12 +89,7 @@ public class PlayerController : CharacterSuper
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "bullet")
-        {
-            Health -= Damage;
-            _healthDisplay.text = Health.ToString();
-
-        }
+       
         if (other.gameObject.tag == "health")
         {
             Health = MaxHealth;
@@ -106,10 +101,7 @@ public class PlayerController : CharacterSuper
         {
             inEnemyBase?.Invoke(this, EventArgs.Empty);
         }
-        if (Health <= 0)
-        {
-            Death();
-        }
+     
     }
 
     private void OnTriggerExit(Collider other)
@@ -119,5 +111,15 @@ public class PlayerController : CharacterSuper
             inEnemyBase?.Invoke(this, EventArgs.Empty);
         }
         
+    }
+    
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "bullet")
+        {
+            damage();
+            _healthDisplay.text = Health.ToString();
+
+        }
     }
 }
