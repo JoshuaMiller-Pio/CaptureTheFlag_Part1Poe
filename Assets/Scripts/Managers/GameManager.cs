@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,29 +8,35 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     private int Ppoints = 0, Apoints = 0;
-    public TextMeshProUGUI Blue = null,Red = null;
-    private bool _paused;
-
+    public TextMeshProUGUI Blue = null, Red = null;
+    private bool _paused, _gameStart;
+    public EventHandler RestartRound;
     public bool Paused
     {
         get => _paused;
         set => _paused = value;
     }
-    
+
+    public bool GameStart
+    {
+        get => _gameStart;
+        set => _gameStart = value;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         Screen.lockCursor = true;
-
-    }
-    
-    // Update is called once per frame
-    void Update()
-    {
+        Debug.Log(Ppoints);
+        updateUI();
         
     }
 
-    private void WinLose()
+
+    // Update is called once per frame
+
+
+private void WinLose()
     {
         if (Ppoints >= 10)
         {
@@ -40,6 +47,11 @@ public class GameManager : Singleton<GameManager>
             
             Debug.Log("AIWins");
         }
+        else
+        {
+            RestartRound?.Invoke(this, EventArgs.Empty);
+        }
+     
         
     }
 

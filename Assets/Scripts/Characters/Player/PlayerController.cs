@@ -12,6 +12,8 @@ public class PlayerController : CharacterSuper
         [SerializeField]private LayerMask ground;
         [SerializeField]private GameObject spawn,BulletSpawn, Bullet;
         [SerializeField]private TextMeshProUGUI _healthDisplay;
+        public EventHandler inEnemyBase;
+        
         
         private Vector3 _velocity;
         private bool _grounded;
@@ -23,6 +25,8 @@ public class PlayerController : CharacterSuper
     private void Start()
     {
         canShoot = true;
+        GameManager.Instance.RestartRound += RestartRound;
+
     }
 
     private void Update()
@@ -69,14 +73,16 @@ public class PlayerController : CharacterSuper
     }
     
     public override void Death()
-    {
+    { 
+        Flagdropped?.Invoke(this, EventArgs.Empty);
         _controller.enabled = false;
         gameObject.transform.position = spawn.transform.position;
         
         Health = MaxHealth;
-
+        
         _healthDisplay.text = Health.ToString();
         _controller.enabled = true;
+        
 
     }
 
@@ -84,22 +90,45 @@ public class PlayerController : CharacterSuper
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "bullet")
-        {
-            Health -= Damage;
-            _healthDisplay.text = Health.ToString();
-
-        }
+       
         if (other.gameObject.tag == "health")
         {
             Health = MaxHealth;
             _healthDisplay.text = Health.ToString();
 
         }
-
-        if (Health <= 0)
+        
+        if (other.gameObject.tag == "bullet")
         {
-            Death();
+            Debug.Log("Take damage");
+            damage();
+            _healthDisplay.text = Health.ToString();
+
+        }
+        if (other.tag == "Red_Base")
+        {
+            inEnemyBase?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Red_Base")
+        {
+            inEnemyBase?.Invoke(this, EventArgs.Empty);
+        }
+        
+    }
+    
+    
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "bullet")
+        {
+            Debug.Log("Take damage");
+            damage();
+            _healthDisplay.text = Health.ToString();
+
         }
     }
 }

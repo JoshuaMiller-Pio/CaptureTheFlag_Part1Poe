@@ -13,11 +13,12 @@ TagManager:
   - Blue_Base
   - bullet
   - health
+  - Bot_Defense
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Bullet
   - Water
   - UI
   - ground

@@ -11,7 +11,6 @@ public class Pause : MonoBehaviour
     void Start()
     {
         player = GameObject.FindWithTag("Player");
-        
     }
 
     // Update is called once per frame
@@ -36,7 +35,6 @@ public class Pause : MonoBehaviour
 
                 player.GetComponent<PlayerController>().enabled = false;
                 player.GetComponent<PlayerLook>().enabled = false;
-
 
             }
             else

@@ -13,16 +13,20 @@ public class BlueFlag : Flags
     {
 
         Restriction = GameObject.FindGameObjectWithTag("AI");
+        ai = Restriction.GetComponent<AIController>();
+        PC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+    
         Restricted = Restriction;
         IsAtBase = true;
-        Spawnlocation = Spawn.transform.position;
-        Debug.Log(Spawn);
+        Spawnlocation = Spawn.transform;
 
     }
 
     private void Start()
     {
         OnflagPickedUp += BluePickup;
+        GameManager.Instance.RestartRound += RestartRound;
+
 
     }
 
@@ -38,6 +42,8 @@ public class BlueFlag : Flags
     {
         gameObject.transform.position = Spawn.transform.position;
         gameObject.transform.rotation = Spawn.transform.rotation;
+        IsAtBase = true;
+        
     }
   
 }
