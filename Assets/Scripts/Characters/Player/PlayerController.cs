@@ -15,7 +15,6 @@ public class PlayerController : CharacterSuper
         public EventHandler inEnemyBase;
         
         
-        
         private Vector3 _velocity;
         private bool _grounded;
         public float timer = 1;
@@ -26,6 +25,8 @@ public class PlayerController : CharacterSuper
     private void Start()
     {
         canShoot = true;
+        GameManager.Instance.RestartRound += RestartRound;
+
     }
 
     private void Update()
@@ -72,7 +73,7 @@ public class PlayerController : CharacterSuper
     }
     
     public override void Death()
-    {
+    { 
         Flagdropped?.Invoke(this, EventArgs.Empty);
         _controller.enabled = false;
         gameObject.transform.position = spawn.transform.position;
@@ -96,12 +97,18 @@ public class PlayerController : CharacterSuper
             _healthDisplay.text = Health.ToString();
 
         }
+        
+        if (other.gameObject.tag == "bullet")
+        {
+            Debug.Log("Take damage");
+            damage();
+            _healthDisplay.text = Health.ToString();
 
+        }
         if (other.tag == "Red_Base")
         {
             inEnemyBase?.Invoke(this, EventArgs.Empty);
         }
-     
     }
 
     private void OnTriggerExit(Collider other)
@@ -113,10 +120,12 @@ public class PlayerController : CharacterSuper
         
     }
     
+    
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.tag == "bullet")
         {
+            Debug.Log("Take damage");
             damage();
             _healthDisplay.text = Health.ToString();
 

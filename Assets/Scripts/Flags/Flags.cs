@@ -11,9 +11,10 @@ public abstract class Flags : MonoBehaviour
 
         private bool _isPickedup = false;
         private bool _isAtBase = true;
-        private Vector3 _spawnLocation;
+        private Transform _spawnLocation;
         private GameObject _restricted,_holder=null;
-        
+        public PlayerController PC;
+        public AIController ai;
 
     #endregion
     
@@ -43,7 +44,7 @@ public abstract class Flags : MonoBehaviour
             get => _isAtBase;
             set => _isAtBase = value;
         }
-        public Vector3 Spawnlocation
+        public Transform Spawnlocation
         {
             get => _spawnLocation;
             set => _spawnLocation = value;
@@ -53,7 +54,7 @@ public abstract class Flags : MonoBehaviour
           
             
         }
-        public Flags(bool isAtBase, GameObject restricted, Vector3 spawnlocation)
+        public Flags(bool isAtBase, GameObject restricted, Transform spawnlocation)
         {
             Spawnlocation = spawnlocation;
             Restricted = restricted;
@@ -64,7 +65,15 @@ public abstract class Flags : MonoBehaviour
 
 private void Start()
 {
+    GameManager.Instance.RestartRound += RestartRound;
 }
+
+
+public void RestartRound(object sender, EventArgs e)
+{
+    Respawn();
+}
+
 
 private void Update()
     {
@@ -78,32 +87,50 @@ private void Update()
     }
     private void OnTriggerEnter(Collider other)
     {
-        
-        
-        
-        if(_isAtBase && other.gameObject != Restricted && other.gameObject.tag != "Blue_Base" && other.gameObject.tag != "Red_Base" && other.gameObject.tag != "bullet")
+
+
+        //pickup at base
+        if (_isAtBase && other.gameObject != Restricted && other.gameObject.tag != "Blue_Base" &&
+            other.gameObject.tag != "Red_Base" && other.gameObject.tag != "bullet")
         {
             _isAtBase = false;
             _holder = other.gameObject;
             _isPickedup = true;
 
             //fires flag pick up event
-          OnflagPickedUp?.Invoke(this, EventArgs.Empty);
+            OnflagPickedUp?.Invoke(this, EventArgs.Empty);
+            assignDroppoint();
+
         }
+        //pickup in the field 
         else if(!_isAtBase && !_isPickedup && (other.tag == "Player" || other.tag == "AI") && (other.gameObject.tag != "Blue_Base" || other.gameObject.tag != "Red_Base") && other.gameObject.tag != "bullet")
         {
             _isPickedup = true;
             OnflagPickedUp?.Invoke(this, EventArgs.Empty);
             _holder = other.gameObject;
-            if (_holder.tag == "Player")
-            {
-               PlayerController PC = _holder.GetComponent<PlayerController>();
-               PC.Flagdropped += drop;
-            }
+            assignDroppoint();
 
-            
-            
+
         }
+        
+        
+        void assignDroppoint()
+        {
+            
+                Debug.Log("dropped assigned");
+            if (_holder.tag == "Player" )
+            {
+                PC.Flagdropped += drop;
+                Debug.Log("subbed player");
+            }
+            else if (_holder.tag == "AI" )
+            {
+                ai.Flagdropped += drop;
+                Debug.Log("subbed AI");
+                
+            }
+        }
+        
 
         //if there is a holder then a point can be awarded
         if (_holder!= null)
@@ -139,8 +166,10 @@ private void Update()
 
     public void drop(object sender, EventArgs e)
     {
-        transform.position = _holder.transform.position;
         _isPickedup = false;
+        transform.position = _holder.transform.position;
+        transform.rotation = _spawnLocation.rotation;
+
     }
 
     public abstract void Respawn();

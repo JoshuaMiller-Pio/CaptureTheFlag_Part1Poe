@@ -33,8 +33,16 @@ public abstract class CharacterSuper : MonoBehaviour
             Death();
         } 
     }
-    
-    
+
+    private void Start()
+    {
+        GameManager.Instance.RestartRound += RestartRound;
+    }
+
+   public void RestartRound(object sender, EventArgs e)
+    {
+        Death();
+    }
     private void Awake()
     {
         _damage = 5;

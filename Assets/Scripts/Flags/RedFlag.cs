@@ -14,15 +14,20 @@ public class RedFlag : Flags
     void Awake()
     {
         Restriction = GameObject.FindGameObjectWithTag("Player");
+        PC = Restriction.GetComponent<PlayerController>();
+        ai = GameObject.FindGameObjectWithTag("AI").GetComponent<AIController>();
         Restricted = Restriction;
         IsAtBase = true;
-        Spawnlocation = Spawn.transform.position;
+        Spawnlocation = Spawn.transform;
 
     }
 
     private void Start()
     {
+        
         OnflagPickedUp += RedPickup;
+        GameManager.Instance.RestartRound += RestartRound;
+
     }
 
   
@@ -38,6 +43,8 @@ public class RedFlag : Flags
     {
         gameObject.transform.position = Spawn.transform.position;
         gameObject.transform.rotation = Spawn.transform.rotation;
+        IsAtBase = true;
+
     }
 
 }
