@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using Random = UnityEngine.Random;
 using UnityEngine;
 using UnityEngine.AI;
@@ -10,11 +11,12 @@ public class AIController : CharacterSuper
         private FiniteStateMachine _currentState,_previousState;
         private NavMeshAgent _agent;
         public GameObject player, spawn,BulletSpawn, Bullet ,flagB,flagR;
+        public GameObject shootlocation; 
         private Vector3 _healPos;
         private GameObject[] _healthitems;
-        private bool _canShoot = true, _inBase = true, _enemyinBase = false ,_ismoving;
-
-        private float _timer = 2;
+        private bool _canShoot = true, _inBase = true, _enemyinBase = false ,_ismoving, _hasFlag = false;
+        private Animator _anim;
+        private float _timer = 2,_shootDistance = 7;
         
     #endregion
     
@@ -36,17 +38,26 @@ public class AIController : CharacterSuper
     void Start()
     {
         player.GetComponent<PlayerController>().inEnemyBase += EnemyCheck;
+        GetComponent<InventoryScript>().aiFlagEquipt += hasFlag;
         _currentState = FiniteStateMachine.Attack;
          _agent = gameObject.GetComponent<NavMeshAgent>();
-         GameManager.Instance.RestartRound += RestartRound;
          _healthitems = GameObject.FindGameObjectsWithTag("health");
-         
+         _anim = gameObject.GetComponent<Animator>();
+         GameManager.Instance.PauseGame += Pause;
+
 
     }
-    
+
+    private void OnDestroy()
+    {
+//player.GetComponent<PlayerController>().inEnemyBase -= EnemyCheck;
+
+    }
+
     // Update is called once per frame
     void Update()
     {
+
         Debug.Log(_currentState);
         Debug.Log(_previousState);
       
@@ -61,16 +72,7 @@ public class AIController : CharacterSuper
             _ismoving = false;
         }
         
-        /*
-        if (GameManager.Instance.Paused  )
-        {
-            _currentState = FiniteStateMachine.Idle;
-            _previousState = _currentState;
-        }
-        else if (_currentState == FiniteStateMachine.Idle && !GameManager.Instance.Paused)
-        {
-            _currentState = _previousState;
-        }*/
+        
         switch (_currentState)
         {
             case FiniteStateMachine.Idle:
@@ -86,6 +88,7 @@ public class AIController : CharacterSuper
                 break;
             
             case FiniteStateMachine.Capture:
+                Capture();
                 break;
             
             case FiniteStateMachine.Return:
@@ -98,14 +101,21 @@ public class AIController : CharacterSuper
         }
     }
 
-    
-    
-    
+
+    private void hasFlag(object sender, EventArgs e)
+    {
+        if (_hasFlag) _hasFlag = false;
+        else _hasFlag = true;
+        
+        _previousState = _currentState;
+        _currentState = FiniteStateMachine.Return;
+    }    
     
     
     public void Idle()
     {
         _agent.SetDestination(gameObject.transform.position);
+        setRunningfalse();
     }
     
     private void Defend()
@@ -118,9 +128,18 @@ public class AIController : CharacterSuper
                 Move();
                 
             }
-            Shootcheck();
+
+            if (DistanceToPlayer() < _shootDistance)
+            {
+                Shootcheck();
+            } 
             healthCheck();
 
+        }
+        else
+        {
+            _previousState = _currentState;
+            _currentState = FiniteStateMachine.Attack;
         }
         
 
@@ -128,21 +147,60 @@ public class AIController : CharacterSuper
 
     private void Attack()
     {
-        _agent.SetDestination(flagR.transform.position);
         
-        if (DistanceToPlayer() < 5)
+        //sets destination to flag
+        _agent.SetDestination(flagR.transform.position);
+        setRunningtrue();
+        
+        if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) < 8)
+        {
+            _previousState = _currentState;
+            _currentState = FiniteStateMachine.Capture;
+        }
+        //checks distance to player before shooting
+        if (DistanceToPlayer() < _shootDistance && !GameManager.Instance.blueatBase)
         {
             Shootcheck();
         }
         healthCheck();
-        //if picked up switch to return
+        
+
+    }
+
+
+    private void Capture()
+    {
+        //set destination to the flag in the field
+        if (!GameManager.Instance.blueatBase)
+        {
+            _agent.SetDestination(flagB.transform.position);
+        }
+        //if flag is at base or distance is greater than 8 switch to attack
+        if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) > 8 || GameManager.Instance.blueatBase)
+        {
+            _previousState = _currentState;
+            _currentState = FiniteStateMachine.Attack;
+        }
+        
+        //shooting and health check
+        if (DistanceToPlayer() < _shootDistance)
+        {
+            Shootcheck();
+        }   
+        healthCheck();
 
     }
     private void Return()
     {
         _agent.SetDestination(spawn.transform.position);
+        setRunningtrue();
         
-        if (DistanceToPlayer() < 5)
+        if (_agent.remainingDistance <=0.0f)
+        {
+            _previousState = _currentState;
+            _currentState = FiniteStateMachine.Attack;
+        }
+        if (DistanceToPlayer() < _shootDistance)
         {
             Shootcheck();
         }
@@ -151,12 +209,12 @@ public class AIController : CharacterSuper
     
     private void Heal()
     {
-        _agent.SetDestination(spawn.transform.position);
-        
-        if (DistanceToPlayer() < 5)
+        _agent.SetDestination(_healPos);
+        setRunningtrue();
+
+        if (DistanceToPlayer() < _shootDistance)
         {
             Shootcheck();
-            _agent.SetDestination(_healPos);
         }
         healthCheck();
     }
@@ -165,9 +223,10 @@ public class AIController : CharacterSuper
   
     private void Move()
     {
+        setRunningtrue();
         float randomx = Random.Range(-3.5f, 3.5f);
         float randomz = Random.Range(-3.5f, 3.5f);
-       // agent.SetDestination(new Vector3(player.transform.position.x ,player.transform.position.y,player.transform.position.z ));
+        _agent.SetDestination(new Vector3(player.transform.position.x ,player.transform.position.y,player.transform.position.z ));
     }
 
    
@@ -182,7 +241,17 @@ public class AIController : CharacterSuper
         yield return null;
     }
 
-
+        private void Pause(object sender, EventArgs e)
+        {
+              
+            if (_currentState != FiniteStateMachine.Idle  )
+            {
+                _previousState = _currentState;
+                _currentState = FiniteStateMachine.Idle;
+                return;
+            }
+            _currentState = _previousState;
+        }
 
 
 
@@ -211,13 +280,13 @@ public class AIController : CharacterSuper
                     _previousState = _currentState;
                     _currentState = FiniteStateMachine.Attack;
                 }
-            }
+            } 
 
-            //if walks into flag, goes into return
-            if (other.gameObject == flagR || other.gameObject == flagB)
+            if (other.tag == "Spawn_AI" && !GameManager.Instance.Paused && _currentState == FiniteStateMachine.Return)
             {
                 _previousState = _currentState;
-                _currentState = FiniteStateMachine.Return;
+                _currentState = FiniteStateMachine.Attack;
+                
             }
             
             //on health pick up increases health and goes back to previous job
@@ -242,19 +311,6 @@ public class AIController : CharacterSuper
             }
         }
 
-        private void OnTriggerStay(Collider other)
-        {
-            if (other.tag == "Spawn_AI" && !GameManager.Instance.Paused )
-            {
-                _inBase = true;
-                if (DistanceToPlayer() < 5)
-                {
-                    _previousState = _currentState;
-                    _currentState = FiniteStateMachine.Defend;
-                }
-            }
-            
-        }
 
 
     #endregion
@@ -262,12 +318,14 @@ public class AIController : CharacterSuper
 
     #region calculations & checks
             
+        //checks if player is in the AI base
         private void EnemyCheck(object sender, EventArgs e)
         {
             if (_enemyinBase) _enemyinBase = false;
             else _enemyinBase = true;
         }
 
+        //checks distance to the nearest health item
         private void healthCheck()
         {
             if (Health < MaxHealth)
@@ -291,7 +349,7 @@ public class AIController : CharacterSuper
         private void Shootcheck()
         {
             //looks at player
-            gameObject.transform.LookAt(player.transform.position);
+            gameObject.transform.LookAt(shootlocation.transform.position);
             //if reload time has been satisfied allows shooting
             if (_canShoot)
             {
@@ -304,7 +362,8 @@ public class AIController : CharacterSuper
         //used to calculate the distance to the player
         private float DistanceToPlayer()
         {
-            float distance = (float)Math.Sqrt(Math.Pow((transform.position.x-player.transform.position.x),2) + Math.Pow((transform.position.y-player.transform.position.y),2)) ;
+            float distance = (float)Math.Sqrt(Math.Pow((transform.position.x-player.transform.position.x),2) + Math.Pow((transform.position.z-player.transform.position.z),2)) ;
+
             return distance;
         }
         
@@ -323,6 +382,22 @@ public class AIController : CharacterSuper
         Flagdropped?.Invoke(this, EventArgs.Empty);
         gameObject.transform.position = spawn.transform.position;
         Health = MaxHealth;
+        
+    }
+
+
+    private void setRunningfalse()
+    {
+       
+            _anim.SetBool("isRunning", false);    
+       
+        
+    }
+    private void setRunningtrue()
+    {
+       
+            _anim.SetBool("isRunning", true);    
+       
         
     }
 

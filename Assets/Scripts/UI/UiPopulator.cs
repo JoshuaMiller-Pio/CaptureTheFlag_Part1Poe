@@ -12,5 +12,6 @@ public class UiPopulator : MonoBehaviour
     {
         GameManager.Instance.Blue = Blue;
         GameManager.Instance.Red = Red;
+        GameManager.Instance.updateUI();
     }
 }
