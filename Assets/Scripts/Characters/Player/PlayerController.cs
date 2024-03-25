@@ -99,7 +99,6 @@ public class PlayerController : CharacterSuper
         
         if (other.gameObject.tag == "bullet")
         {
-            Debug.Log("Take damage");
             damage();
             _healthDisplay.text = Health.ToString();
             

@@ -39,18 +39,19 @@ public class AIController : CharacterSuper
     {
         player.GetComponent<PlayerController>().inEnemyBase += EnemyCheck;
         GetComponent<InventoryScript>().aiFlagEquipt += hasFlag;
-        _currentState = FiniteStateMachine.Attack;
          _agent = gameObject.GetComponent<NavMeshAgent>();
+        _currentState = FiniteStateMachine.Idle;
          _healthitems = GameObject.FindGameObjectsWithTag("health");
          _anim = gameObject.GetComponent<Animator>();
-         GameManager.Instance.PauseGame += Pause;
+         GameManager.Instance.StartGame += startGame;
+         
 
 
     }
 
     private void OnDestroy()
     {
-//player.GetComponent<PlayerController>().inEnemyBase -= EnemyCheck;
+        player.GetComponent<PlayerController>().inEnemyBase -= EnemyCheck;
 
     }
 
@@ -140,6 +141,7 @@ public class AIController : CharacterSuper
         {
             _previousState = _currentState;
             _currentState = FiniteStateMachine.Attack;
+            Debug.Log("aggg");
         }
         
 
@@ -241,16 +243,9 @@ public class AIController : CharacterSuper
         yield return null;
     }
 
-        private void Pause(object sender, EventArgs e)
+        private void startGame(object sender, EventArgs e)
         {
-              
-            if (_currentState != FiniteStateMachine.Idle  )
-            {
-                _previousState = _currentState;
-                _currentState = FiniteStateMachine.Idle;
-                return;
-            }
-            _currentState = _previousState;
+            _currentState = FiniteStateMachine.Attack;
         }
 
 
