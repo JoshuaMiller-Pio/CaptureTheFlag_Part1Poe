@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -31,8 +30,7 @@ public class GameManager : Singleton<GameManager>
     void Start()
     {
         //locks and hide cursor for fps feel
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        
         updateUI();
         
     }
@@ -46,7 +44,6 @@ private void WinLose()
         {
             win.gameObject.SetActive(true);
             Cursor.visible = true;
-            
             Cursor.lockState = CursorLockMode.None;
 
             GameOver?.Invoke(this,EventArgs.Empty);
@@ -118,6 +115,8 @@ private void WinLose()
         //button controls for play
         public void Play()
         {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             SceneManager.LoadScene(1);
         }
         

@@ -600,6 +600,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1337979261 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9167637361131563455, guid: 2d5262237838d99478a54e48b3f6febe, type: 3}
+  m_PrefabInstance: {fileID: 5062734409753486727}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1500353733 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1919953585961962007, guid: fa30b15b01bfa9a42a3d4ff9f753729e, type: 3}
@@ -1358,9 +1363,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1328448606}
     - target: {fileID: 666260869459537456, guid: 2d5262237838d99478a54e48b3f6febe, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1337979261}
+    - target: {fileID: 666260869459537456, guid: 2d5262237838d99478a54e48b3f6febe, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1328448606}
+    - target: {fileID: 666260869459537456, guid: 2d5262237838d99478a54e48b3f6febe, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
     - target: {fileID: 984265035507975719, guid: 2d5262237838d99478a54e48b3f6febe, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1441,6 +1454,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1328448606}
+    - target: {fileID: 4343763704766913578, guid: 2d5262237838d99478a54e48b3f6febe, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Reset
+      objectReference: {fileID: 0}
     - target: {fileID: 4544493676742000225, guid: 2d5262237838d99478a54e48b3f6febe, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -1469,6 +1486,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1328448606}
+    - target: {fileID: 7423788819321859753, guid: 2d5262237838d99478a54e48b3f6febe, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Reset
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
