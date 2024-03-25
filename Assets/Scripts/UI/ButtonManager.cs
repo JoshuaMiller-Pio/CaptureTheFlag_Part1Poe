@@ -25,6 +25,11 @@ public class ButtonManager : MonoBehaviour
         
         GameManager.Instance.Restart();
     }
+    public void Reset()
+    {
+        
+        GameManager.Instance.ResetGame();
+    }
 
     public void Quit()
     {

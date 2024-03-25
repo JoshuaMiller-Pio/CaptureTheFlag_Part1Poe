@@ -12,8 +12,6 @@ public class Pause : MonoBehaviour
 
     private void Awake()
     {
-       // 
-       Debug.Log("first");
        
         player.GetComponent<PlayerController>().enabled = false;
         GameManager.Instance.GameStart();
@@ -40,6 +38,7 @@ public class Pause : MonoBehaviour
    {
        
        player.GetComponent<PlayerController>().enabled = false;
+       player.GetComponent<PlayerLook>().enabled = false;
        gameovers = true;
 
    }

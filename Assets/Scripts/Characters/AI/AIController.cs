@@ -57,7 +57,6 @@ public class AIController : CharacterSuper
     {
 
        
-      Debug.Log(Health);
         
         
         if (_agent.remainingDistance>0.1f)
