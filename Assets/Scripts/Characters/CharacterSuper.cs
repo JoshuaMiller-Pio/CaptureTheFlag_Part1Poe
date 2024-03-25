@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class CharacterSuper : MonoBehaviour
 {
     private int _health;
-    private int _maxHealth = 10;
+    private int _maxHealth = 100;
     private int _damage;
     public EventHandler Flagdropped;
     public int MaxHealth
@@ -40,8 +40,8 @@ public abstract class CharacterSuper : MonoBehaviour
 
     private void Awake()
     {
-        _damage = 5;
-        _health = 10;
+        _damage = 30;
+        _health = 100;
     }
 
     

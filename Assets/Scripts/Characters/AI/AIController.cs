@@ -49,19 +49,14 @@ public class AIController : CharacterSuper
 
     }
 
-    private void OnDestroy()
-    {
-        player.GetComponent<PlayerController>().inEnemyBase -= EnemyCheck;
-
-    }
+  
 
     // Update is called once per frame
     void Update()
     {
 
-        Debug.Log(_currentState);
-        Debug.Log(_previousState);
-      
+       
+      Debug.Log(Health);
         
         
         if (_agent.remainingDistance>0.1f)
@@ -107,9 +102,12 @@ public class AIController : CharacterSuper
     {
         if (_hasFlag) _hasFlag = false;
         else _hasFlag = true;
+        if (_currentState != FiniteStateMachine.Return)
+        {
+            _previousState = _currentState;
+            _currentState = FiniteStateMachine.Return;
+        }
         
-        _previousState = _currentState;
-        _currentState = FiniteStateMachine.Return;
     }    
     
     
@@ -137,11 +135,10 @@ public class AIController : CharacterSuper
             healthCheck();
 
         }
-        else
+        else if(_currentState != FiniteStateMachine.Attack)
         {
             _previousState = _currentState;
             _currentState = FiniteStateMachine.Attack;
-            Debug.Log("aggg");
         }
         
 
@@ -160,7 +157,7 @@ public class AIController : CharacterSuper
             _currentState = FiniteStateMachine.Capture;
         }
         //checks distance to player before shooting
-        if (DistanceToPlayer() < _shootDistance && !GameManager.Instance.blueatBase)
+        if (DistanceToPlayer() < _shootDistance )
         {
             Shootcheck();
         }
@@ -180,8 +177,13 @@ public class AIController : CharacterSuper
         //if flag is at base or distance is greater than 8 switch to attack
         if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) > 8 || GameManager.Instance.blueatBase)
         {
-            _previousState = _currentState;
+            if (_currentState != FiniteStateMachine.Attack)
+            { 
+                _previousState = _currentState;
             _currentState = FiniteStateMachine.Attack;
+                
+            }
+           
         }
         
         //shooting and health check
@@ -196,12 +198,15 @@ public class AIController : CharacterSuper
     {
         _agent.SetDestination(spawn.transform.position);
         setRunningtrue();
-        
-        if (_agent.remainingDistance <=0.0f)
+        if (_agent.remainingDistance <= 0 && _agent.remainingDistance > -50)
         {
-            _previousState = _currentState;
-            _currentState = FiniteStateMachine.Attack;
+            if (_currentState != FiniteStateMachine.Attack)
+            {
+                _previousState = _currentState;
+                _currentState = FiniteStateMachine.Attack;
+            }
         }
+        Debug.Log(_agent.remainingDistance);
         if (DistanceToPlayer() < _shootDistance)
         {
             Shootcheck();
@@ -261,7 +266,7 @@ public class AIController : CharacterSuper
                 damage();
             }
             //if AI is in spawn and game isnt pause it goes into defense
-            if (other.tag == "Spawn_AI" && !GameManager.Instance.Paused)
+            if (other.tag == "Spawn_AI" && _enemyinBase)
             {
                 _inBase = true;
                 if (DistanceToPlayer() < 5)
@@ -277,12 +282,7 @@ public class AIController : CharacterSuper
                 }
             } 
 
-            if (other.tag == "Spawn_AI" && !GameManager.Instance.Paused && _currentState == FiniteStateMachine.Return)
-            {
-                _previousState = _currentState;
-                _currentState = FiniteStateMachine.Attack;
-                
-            }
+      
             
             //on health pick up increases health and goes back to previous job
             if (other.gameObject.tag == "health")
@@ -301,6 +301,7 @@ public class AIController : CharacterSuper
             if (other.tag == "Spawn_AI")
             {
                 _inBase = false;
+                
                 _previousState = _currentState;
                 _currentState = FiniteStateMachine.Attack;
             }
@@ -323,14 +324,21 @@ public class AIController : CharacterSuper
         //checks distance to the nearest health item
         private void healthCheck()
         {
-            if (Health < MaxHealth)
+            float healthDist;
+            if (Health < MaxHealth/4)
             {
                 for (int i = 0; i < _healthitems.Length; i++)
                 {
-                    if (DistanceToObject(_healthitems[i].transform.position.x, _healthitems[i].transform.position.z) < 5)
+                    healthDist = DistanceToObject(_healthitems[i].transform.position.x,
+                        _healthitems[i].transform.position.z);
+                    
+                    if (healthDist< 20)
                     {
-                        _previousState = _currentState;
-                        _currentState = FiniteStateMachine.Heal;
+                        if (_currentState != FiniteStateMachine.Heal)
+                        {
+                            _previousState = _currentState;
+                            _currentState = FiniteStateMachine.Heal;
+                        }
                         _healPos=_healthitems[i].transform.position;
                     }
 

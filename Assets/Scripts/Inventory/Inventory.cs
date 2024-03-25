@@ -85,10 +85,11 @@ public class InventoryScript : MonoBehaviour
     private void AiFlagEquipt()
     {
         aiFlagEquipt?.Invoke(this,EventArgs.Empty);
+        
     } 
     private void PlayerFlagEquipt()
     {
-
+        SoundManager.Instance.playPickup();
         playerFlagEquipt?.Invoke(this,EventArgs.Empty);
     }
     

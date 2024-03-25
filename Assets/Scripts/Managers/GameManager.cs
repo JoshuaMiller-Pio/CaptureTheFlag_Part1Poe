@@ -28,10 +28,10 @@ public class GameManager : Singleton<GameManager>
     // Start is called before the first frame update
     void Start()
     {
+        
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         updateUI();
-        GameStart();
         
     }
 
@@ -119,7 +119,9 @@ private void WinLose()
     IEnumerator startGame()
     {
         yield return new WaitForSeconds(3);
+        SoundManager.Instance.playStart();
         StartGame?.Invoke(this,EventArgs.Empty);
+        Debug.Log("called");
         _paused = false;
         yield return null;
     }

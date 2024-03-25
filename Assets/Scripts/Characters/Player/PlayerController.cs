@@ -62,6 +62,7 @@ public class PlayerController : CharacterSuper
 
     private IEnumerator shoot()
     {
+        SoundManager.Instance.playShot();
          GameObject spawnedBullet = Instantiate(Bullet,BulletSpawn.transform.position, Quaternion.identity);
          spawnedBullet.GetComponent<Rigidbody>().AddForce(-BulletSpawn.transform.forward*50, ForceMode.Impulse);
              yield return new WaitForSeconds(timer);
@@ -94,6 +95,7 @@ public class PlayerController : CharacterSuper
         {
             Health = MaxHealth;
             _healthDisplay.text = Health.ToString();
+            SoundManager.Instance.playHeal();
 
         }
         

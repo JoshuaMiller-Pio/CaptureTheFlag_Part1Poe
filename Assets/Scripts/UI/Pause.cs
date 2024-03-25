@@ -12,6 +12,8 @@ public class Pause : MonoBehaviour
     
     void Start()
     {
+        GameManager.Instance.GameStart();
+
         player = GameObject.FindWithTag("Player");
         GameManager.Instance.StartGame += startGame;
         player.GetComponent<PlayerController>().enabled = false;
@@ -24,7 +26,12 @@ public class Pause : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+   private void OnDestroy()
+   {
+
+   }
+
+   // Update is called once per frame
     void Update()
     {
         //pressing esc pauses the game and shows the appropriate panel 
