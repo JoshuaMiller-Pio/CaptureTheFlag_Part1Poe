@@ -11,8 +11,8 @@ public class GameManager : Singleton<GameManager>
 {
     private int Ppoints = 0, Apoints = 0;
     public TextMeshProUGUI Blue = null, Red = null;
-    private bool _paused, _gameStart;
-    public EventHandler RestartRound, PauseGame;
+    private bool _paused = true;
+    public EventHandler RestartRound, StartGame;
     public bool blueatBase = true;
     public bool Paused
     {
@@ -20,15 +20,15 @@ public class GameManager : Singleton<GameManager>
         set => _paused = value;
     }
 
-    public bool GameStart
+    public void GameStart()
     {
-        get => _gameStart;
-        set => _gameStart = value;
+        StartCoroutine(startGame());
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         updateUI();
@@ -81,10 +81,9 @@ private void WinLose()
 
     #region GameControls
 
-        public void Pause()
+        public void OnPause()
         {
-            PauseGame?.Invoke(this, EventArgs.Empty);
-           // freezeTime();
+            freezeTime();
         }
 
         private void freezeTime()
@@ -116,4 +115,14 @@ private void WinLose()
         }
 
     #endregion
+
+    IEnumerator startGame()
+    {
+        yield return new WaitForSeconds(3);
+        SoundManager.Instance.playStart();
+        StartGame?.Invoke(this,EventArgs.Empty);
+        Debug.Log("called");
+        _paused = false;
+        yield return null;
+    }
 }

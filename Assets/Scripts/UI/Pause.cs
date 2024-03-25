@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,19 +9,36 @@ public class Pause : MonoBehaviour
     public GameObject[] turnoff ,turnOn;
     private bool active = false;
     private GameObject player;
+    
     void Start()
     {
+        GameManager.Instance.GameStart();
+
         player = GameObject.FindWithTag("Player");
+        GameManager.Instance.StartGame += startGame;
+        player.GetComponent<PlayerController>().enabled = false;
+   
     }
 
-    // Update is called once per frame
+   private void startGame(object sender, EventArgs e)
+    {
+        player.GetComponent<PlayerController>().enabled = true;
+
+    }
+
+   private void OnDestroy()
+   {
+
+   }
+
+   // Update is called once per frame
     void Update()
     {
         //pressing esc pauses the game and shows the appropriate panel 
         if (Input.GetButtonDown("Cancel"))
         {
             
-            GameManager.Instance.Pause();
+            GameManager.Instance.OnPause();
             
             
             if (active == false)

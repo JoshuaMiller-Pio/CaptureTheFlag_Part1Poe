@@ -1,27 +1,26 @@
 /*
-  maximo:
   
-  Y Bot- character
-  left strafe
-  right strafe
-  pistol run
-  death from front
-  pistol idle
-  pistol shoot
-  
+    [3D MODLES]
+    
+    Miller-Pio, J. (2024). Gun model. [Blender 3D Model]. Digital.
+    Miller-Pio, J. (2024). health model. [Blender 3D Model]. Digital.
+    Miller-Pio, J. (2024). Stadium Model. [Blender 3D Model]. Digital.
+    Miller-Pio, J. (2024). Stadium walls. [Blender 3D Model]. Digital.
+    Worrok W Kurniawan. No Date. Mixamo. Available at: https://www.mixamo.com/#/?page=1&query=&type=Character [Accessed: 1 March 2024].
+    Y Bot. No Date. Mixamo. Available at: https://www.mixamo.com/#/?page=1&query=&type=Character [Accessed: 1 March 2024].
+    
 
-  
-  Worrok W Kurniawan - character
-  cheering
-  rallying
-  
-  3d skybox
-  https://tools.wwwtyro.net/space-3d/index.html#animationSpeed=0.1&fov=70&nebulae=true&pointStars=true&resolution=1024&seed=3z3i314pvpc0&stars=true&sun=true
-  
-  cog png
-https://www.pngwing.com/en/free-png-agsek
-  
-  all scructures done by me
 
-  
+    [ANIMATIONS]
+    Cheering. No Date. Mixamo. Available at: https://www.mixamo.com/#/?page=1&query=cheering&type=Motion%2CMotionPack [Accessed: 1 March 2024].
+    pistol idle. No Date. Mixamo. Available at: https://www.mixamo.com/#/?page=1&query=pistol+idle&type=Motion%2CMotionPack [Accessed: 1 March 2024].
+    pistol run. No Date. Mixamo. Available at: https://www.mixamo.com/#/?page=1&query=pistol+run&type=Motion%2CMotionPack [Accessed: 1 March 2024].
+    Rallying. No Date. Mixamo. Available at:https://www.mixamo.com/#/?page=1&query=rallying&type=Motion%2CMotionPack [Accessed: 1 March 2024].
+    
+    
+    
+    
+      
+     
+
 */
