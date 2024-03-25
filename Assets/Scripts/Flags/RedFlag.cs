@@ -8,7 +8,9 @@ public class RedFlag : Flags
     // Start is called before the first frame update
     public GameObject Spawn;
     public GameObject Restriction;
-    public EventHandler onRedFlagPickup;
+    public EventHandler playerOnRedFlagPickup;
+    public EventHandler aiOnRedFlagPickup;
+   
 
     
     void Awake()
@@ -24,9 +26,8 @@ public class RedFlag : Flags
 
     private void Start()
     {
-        
+        _collider = gameObject.GetComponent<SphereCollider>();
         OnflagPickedUp += RedPickup;
-        GameManager.Instance.RestartRound += RestartRound;
 
     }
 
@@ -35,12 +36,27 @@ public class RedFlag : Flags
     
     private void RedPickup(object sender, EventArgs e)
     {
-         onRedFlagPickup?.Invoke(this, EventArgs.Empty);
+        if (Holder != null)
+        {
+            if (Holder.tag == "Player" )
+            {
+                playerOnRedFlagPickup?.Invoke(this, EventArgs.Empty);
+            
+            }
+            else
+            {
+                aiOnRedFlagPickup?.Invoke(this, EventArgs.Empty);
+            
+            }
+        }
+      
     }
 
     override 
     public void Respawn()
     {
+        Holder = null;
+
         gameObject.transform.position = Spawn.transform.position;
         gameObject.transform.rotation = Spawn.transform.rotation;
         IsAtBase = true;

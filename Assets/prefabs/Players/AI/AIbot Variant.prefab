@@ -24,12 +24,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3904520936640586483}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.04715824, y: 0.70553255, z: -0.70553255, w: 0.04715824}
-  m_LocalPosition: {x: -0.0003, y: 0.0935, z: 0.0105}
-  m_LocalScale: {x: 0.17388165, y: 0.10820838, z: 0.18115965}
+  m_LocalRotation: {x: 0.9977707, y: -0.06669163, z: -0.0024380325, w: 0.0001629591}
+  m_LocalPosition: {x: 0.029237986, y: 0.57525635, z: 1.1482315}
+  m_LocalScale: {x: 1.0106378, y: 0.9955489, z: 0.99636894}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1837682258383572275}
+  m_Father: {fileID: 6200627407285567520}
   m_LocalEulerAnglesHint: {x: 90, y: 175.687, z: 3.335}
 --- !u!1001 &5580710031091454464
 PrefabInstance:
@@ -97,10 +97,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6121069689253125939, guid: 0ecd7540179c11b4fb96ac63a8cdc892, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5931244234957204633}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ecd7540179c11b4fb96ac63a8cdc892, type: 3}
 --- !u!4 &1837682258383572275 stripped
@@ -826,6 +823,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6778dff7ea5dd0348b12fce7adc7d864, type: 3}
       insertIndex: 0
       addedObject: {fileID: 1837682258383572275}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6778dff7ea5dd0348b12fce7adc7d864, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5931244234957204633}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6778dff7ea5dd0348b12fce7adc7d864, type: 3}
       insertIndex: -1
@@ -980,3 +980,6 @@ MonoBehaviour:
   spawn: {fileID: 0}
   BulletSpawn: {fileID: 3904520936640586483}
   Bullet: {fileID: 6733664346467768069, guid: 7426a8e55f8161f41be296ade584335d, type: 3}
+  flagB: {fileID: 0}
+  flagR: {fileID: 0}
+  shootlocation: {fileID: 0}

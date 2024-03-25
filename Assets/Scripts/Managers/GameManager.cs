@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
 
 public class GameManager : Singleton<GameManager>
 {
     private int Ppoints = 0, Apoints = 0;
     public TextMeshProUGUI Blue = null, Red = null;
     private bool _paused, _gameStart;
-    public EventHandler RestartRound;
+    public EventHandler RestartRound, PauseGame;
+    public bool blueatBase = true;
     public bool Paused
     {
         get => _paused;
@@ -26,8 +29,8 @@ public class GameManager : Singleton<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-        Screen.lockCursor = true;
-        Debug.Log(Ppoints);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         updateUI();
         
     }
@@ -57,11 +60,13 @@ private void WinLose()
 
     public void setPpoints()
     {
+        Restart();
         Ppoints++;
         updateUI();
     }
     public void setApoints()
     {
+        Restart();
         Apoints++;
         updateUI();
     }
@@ -76,7 +81,22 @@ private void WinLose()
 
     #region GameControls
 
-        
+        public void Pause()
+        {
+            PauseGame?.Invoke(this, EventArgs.Empty);
+           // freezeTime();
+        }
+
+        private void freezeTime()
+        {
+            if (Time.timeScale != 0)
+            {
+                Time.timeScale = 0;
+                return;
+            }
+
+            Time.timeScale = 1;
+        }
         public void Play()
         {
             SceneManager.LoadScene(1);
@@ -85,6 +105,7 @@ private void WinLose()
         public void Restart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            
 
         }
 

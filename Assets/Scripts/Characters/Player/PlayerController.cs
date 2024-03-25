@@ -25,7 +25,6 @@ public class PlayerController : CharacterSuper
     private void Start()
     {
         canShoot = true;
-        GameManager.Instance.RestartRound += RestartRound;
 
     }
 
@@ -103,6 +102,7 @@ public class PlayerController : CharacterSuper
             Debug.Log("Take damage");
             damage();
             _healthDisplay.text = Health.ToString();
+            
 
         }
         if (other.tag == "Red_Base")
@@ -125,7 +125,6 @@ public class PlayerController : CharacterSuper
     {
         if (other.gameObject.tag == "bullet")
         {
-            Debug.Log("Take damage");
             damage();
             _healthDisplay.text = Health.ToString();
 

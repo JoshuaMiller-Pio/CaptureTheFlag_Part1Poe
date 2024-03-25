@@ -11,12 +11,18 @@ public class InventoryScript : MonoBehaviour
     private bool _hasBlueFlag = false;
     private bool _hasRedFlag = false;
 
-    public GameObject[] flags;
+
+    public EventHandler aiFlagEquipt;
+    public EventHandler playerFlagEquipt;
+    public EventHandler FlagDropped;
     // Start is called before the first frame update
     void Start()
     {
-        blueflag.OnBlueFlagPickup += hasBlueFlag;
-        redflag.onRedFlagPickup += hasRedFlag;
+        //subscribes to events
+        blueflag.playerOnBlueFlagPickup += playerHasBlueFlag;
+        redflag.playerOnRedFlagPickup += playerHasRedFlag;
+        blueflag.aiOnBlueFlagPickup += aiHasBlueFlag;
+        redflag.aiOnRedFlagPickup += aiHasRedFlag;
     }
     
 
@@ -26,14 +32,70 @@ public class InventoryScript : MonoBehaviour
         
     }
 
-    private void hasRedFlag(object sender, EventArgs e)
+    //destroys events once reloading
+    private void OnDestroy()
     {
-        _hasRedFlag = true;
-        Debug.Log("has red flag");
+        blueflag.playerOnBlueFlagPickup -= playerHasBlueFlag;
+        redflag.playerOnRedFlagPickup -= playerHasRedFlag;
+        blueflag.aiOnBlueFlagPickup -= aiHasBlueFlag;
+        redflag.aiOnRedFlagPickup -= aiHasRedFlag;
     }
-    private void hasBlueFlag(object sender, EventArgs e)
+
+    
+    
+    //events for when player or AI has flag
+    private void playerHasRedFlag(object sender, EventArgs e)
     {
-        _hasBlueFlag = true;
+        if (gameObject.tag == "Player")
+        {
+            _hasRedFlag = true;
+            PlayerFlagEquipt();
+        }
+      
+    }
+    private void playerHasBlueFlag(object sender, EventArgs e)
+    {
+        if (gameObject.tag == "Player")
+        {
+            _hasBlueFlag = true;
+            PlayerFlagEquipt();
+        }
+       
+    }
+    private void aiHasRedFlag(object sender, EventArgs e)
+    {
+        if (gameObject.tag == "AI")
+        {
+            _hasRedFlag = true;
+            AiFlagEquipt();
+        }
+    }
+    private void aiHasBlueFlag(object sender, EventArgs e)
+    {
+        if (gameObject.tag == "AI")
+        {
+            _hasBlueFlag = true;
+            AiFlagEquipt();
+        }
+        
+    }
+    
+ 
+
+    private void AiFlagEquipt()
+    {
+        aiFlagEquipt?.Invoke(this,EventArgs.Empty);
+    } 
+    private void PlayerFlagEquipt()
+    {
+
+        playerFlagEquipt?.Invoke(this,EventArgs.Empty);
+    }
+    
+    
+    private void flagDropped()
+    {
+        FlagDropped?.Invoke(this,EventArgs.Empty);
     }
     
 }

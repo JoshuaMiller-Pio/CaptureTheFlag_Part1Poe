@@ -16,8 +16,13 @@ public class Pause : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //pressing esc pauses the game and shows the appropriate panel 
         if (Input.GetButtonDown("Cancel"))
         {
+            
+            GameManager.Instance.Pause();
+            
+            
             if (active == false)
             {
                 for (int i = 0; i < turnoff.Length; i++)
