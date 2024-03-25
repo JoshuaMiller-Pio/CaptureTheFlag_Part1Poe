@@ -12,7 +12,8 @@ public class GameManager : Singleton<GameManager>
     private int Ppoints = 0, Apoints = 0;
     public TextMeshProUGUI Blue = null, Red = null;
     private bool _paused = true;
-    public EventHandler RestartRound, StartGame;
+    public Canvas win, loss;
+    public EventHandler RestartRound, StartGame, GameOver;
     public bool blueatBase = true;
     public bool Paused
     {
@@ -44,11 +45,19 @@ private void WinLose()
         if (Ppoints >= 10)
         {
             Debug.Log("PlayerWins");
+            win.gameObject.SetActive(true);
+            Cursor.visible = true;
+
+            GameOver?.Invoke(this,EventArgs.Empty);
         }
         else if (Apoints >= 10)
         {
             
             Debug.Log("AIWins");
+            loss.gameObject.SetActive(true);
+            Cursor.visible = true;
+
+            GameOver?.Invoke(this,EventArgs.Empty);
         }
         else
         {
@@ -104,7 +113,8 @@ private void WinLose()
         public void Restart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            
+            Cursor.visible = false;
+
 
         }
 
@@ -120,6 +130,7 @@ private void WinLose()
     {
         yield return new WaitForSeconds(3);
         SoundManager.Instance.playStart();
+            Debug.Log("seconds");
         StartGame?.Invoke(this,EventArgs.Empty);
         Debug.Log("called");
         _paused = false;

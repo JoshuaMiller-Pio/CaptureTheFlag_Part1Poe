@@ -44,6 +44,7 @@ public class AIController : CharacterSuper
          _healthitems = GameObject.FindGameObjectsWithTag("health");
          _anim = gameObject.GetComponent<Animator>();
          GameManager.Instance.StartGame += startGame;
+         GameManager.Instance.GameOver += gameover;
          
 
 
@@ -252,7 +253,10 @@ public class AIController : CharacterSuper
         {
             _currentState = FiniteStateMachine.Attack;
         }
-
+        private void gameover(object sender, EventArgs e)
+        {
+            _currentState = FiniteStateMachine.Idle;
+        }
 
 
 

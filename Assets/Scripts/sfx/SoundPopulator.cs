@@ -18,6 +18,10 @@ public class SoundPopulator : MonoBehaviour
         
     }
 
+    public void playButton()
+    {
+        SoundManager.Instance.playPickup();
+    }
     // Update is called once per frame
     void Update()
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -6,7 +7,13 @@ using UnityEngine.UI;
 
 public class ButtonManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Canvas win, loss;
+    // Start is called before the first frame 
+    private void Start()
+    {
+        GameManager.Instance.win = win;
+        GameManager.Instance.loss = loss;
+    }
 
     public void Play()
     {
