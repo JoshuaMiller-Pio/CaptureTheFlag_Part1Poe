@@ -7,24 +7,41 @@ public class Pause : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject[] turnoff ,turnOn;
-    private bool active = false;
-    private GameObject player;
-    
-    void Start()
+    private bool active = false, gameovers = false;
+    public GameObject player;
+
+    private void Awake()
     {
+       
+        player.GetComponent<PlayerController>().enabled = false;
         GameManager.Instance.GameStart();
 
-        player = GameObject.FindWithTag("Player");
         GameManager.Instance.StartGame += startGame;
-        player.GetComponent<PlayerController>().enabled = false;
+        
+    }
+
+    void Start()
+    {
+
+        GameManager.Instance.GameOver += gameover;
    
     }
 
    private void startGame(object sender, EventArgs e)
     {
+        player = GameObject.FindWithTag("Player");
         player.GetComponent<PlayerController>().enabled = true;
 
     }
+   
+   private void gameover(object sender, EventArgs e)
+   {
+       
+       player.GetComponent<PlayerController>().enabled = false;
+       player.GetComponent<PlayerLook>().enabled = false;
+       gameovers = true;
+
+   }
 
    private void OnDestroy()
    {
@@ -35,7 +52,7 @@ public class Pause : MonoBehaviour
     void Update()
     {
         //pressing esc pauses the game and shows the appropriate panel 
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel") && !gameovers)
         {
             
             GameManager.Instance.OnPause();

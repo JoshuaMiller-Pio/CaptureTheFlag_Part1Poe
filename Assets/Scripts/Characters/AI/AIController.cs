@@ -44,6 +44,7 @@ public class AIController : CharacterSuper
          _healthitems = GameObject.FindGameObjectsWithTag("health");
          _anim = gameObject.GetComponent<Animator>();
          GameManager.Instance.StartGame += startGame;
+         GameManager.Instance.GameOver += gameover;
          
 
 
@@ -56,7 +57,6 @@ public class AIController : CharacterSuper
     {
 
        
-      Debug.Log(Health);
         
         
         if (_agent.remainingDistance>0.1f)
@@ -150,8 +150,8 @@ public class AIController : CharacterSuper
         //sets destination to flag
         _agent.SetDestination(flagR.transform.position);
         setRunningtrue();
-        
-        if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) < 8)
+        Debug.Log(DistanceToObject(flagB.transform.position.x, flagB.transform.position.z));
+        if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) <30)
         {
             _previousState = _currentState;
             _currentState = FiniteStateMachine.Capture;
@@ -206,7 +206,6 @@ public class AIController : CharacterSuper
                 _currentState = FiniteStateMachine.Attack;
             }
         }
-        Debug.Log(_agent.remainingDistance);
         if (DistanceToPlayer() < _shootDistance)
         {
             Shootcheck();
@@ -252,7 +251,10 @@ public class AIController : CharacterSuper
         {
             _currentState = FiniteStateMachine.Attack;
         }
-
+        private void gameover(object sender, EventArgs e)
+        {
+            _currentState = FiniteStateMachine.Idle;
+        }
 
 
 

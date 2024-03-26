@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +11,8 @@ public class GameManager : Singleton<GameManager>
     private int Ppoints = 0, Apoints = 0;
     public TextMeshProUGUI Blue = null, Red = null;
     private bool _paused = true;
-    public EventHandler RestartRound, StartGame;
+    public Canvas win, loss;
+    public EventHandler RestartRound, StartGame, GameOver;
     public bool blueatBase = true;
     public bool Paused
     {
@@ -22,70 +22,86 @@ public class GameManager : Singleton<GameManager>
 
     public void GameStart()
     {
+        //starts the count down for the game
         StartCoroutine(startGame());
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        //locks and hide cursor for fps feel
         
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         updateUI();
         
     }
 
 
-    // Update is called once per frame
 
-
+//checks the win loss conditoons or restarts the round
 private void WinLose()
     {
-        if (Ppoints >= 10)
+        if (Ppoints >= 5)
         {
-            Debug.Log("PlayerWins");
+            win.gameObject.SetActive(true);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
+            GameOver?.Invoke(this,EventArgs.Empty);
         }
-        else if (Apoints >= 10)
+        else if (Apoints >= 5)
         {
             
-            Debug.Log("AIWins");
+            loss.gameObject.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+
+            GameOver?.Invoke(this,EventArgs.Empty);
         }
         else
         {
-            RestartRound?.Invoke(this, EventArgs.Empty);
+            Restart();
         }
+       
      
         
     }
 
+//sets player points
     public void setPpoints()
     {
-        Restart();
         Ppoints++;
         updateUI();
+        WinLose();
+
+
     }
+    //sets AI points
     public void setApoints()
     {
-        Restart();
+
         Apoints++;
         updateUI();
+        WinLose();
+
     }
+    //updates the UI with the new score
     public void updateUI()
     {
         Blue.text = Ppoints.ToString();
         Red.text = Apoints.ToString();
-        WinLose();
     }
 
 
-
+    
     #region GameControls
-
+        
+    
         public void OnPause()
         {
             freezeTime();
         }
-
+        //freezes game when paused
         private void freezeTime()
         {
             if (Time.timeScale != 0)
@@ -96,18 +112,35 @@ private void WinLose()
 
             Time.timeScale = 1;
         }
+        //button controls for play
         public void Play()
         {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             SceneManager.LoadScene(1);
         }
-
+        
+        //button controls for restart
         public void Restart()
         {
+            RestartRound?.Invoke(this, EventArgs.Empty);
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            
+
 
         }
+        
+        //full reset of the game including score if players want to play again
+        public void ResetGame()
+        {
+            Ppoints = 0;
+            Apoints = 0;
+            Cursor.visible = false;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
+
+        }
+        
+        //quits game
         public void Quit()
         {
             Application.Quit();
@@ -116,13 +149,16 @@ private void WinLose()
 
     #endregion
 
+    //after alloted time game starts
     IEnumerator startGame()
     {
         yield return new WaitForSeconds(3);
         SoundManager.Instance.playStart();
         StartGame?.Invoke(this,EventArgs.Empty);
-        Debug.Log("called");
         _paused = false;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         yield return null;
     }
 }
