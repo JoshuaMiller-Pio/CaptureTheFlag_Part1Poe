@@ -8,7 +8,7 @@ public class Pause : MonoBehaviour
     // Start is called before the first frame update
     public GameObject[] turnoff ,turnOn;
     private bool active = false, gameovers = false;
-    public GameObject player;
+    public GameObject player, refs;
 
     private void Awake()
     {
@@ -91,6 +91,7 @@ public class Pause : MonoBehaviour
                 active = false; 
                 Screen.lockCursor = true;
                 GameManager.Instance.Paused = active;
+                refs.SetActive(false);
                 player.GetComponent<PlayerController>().enabled = true;
                 player.GetComponent<PlayerLook>().enabled = true;
                 

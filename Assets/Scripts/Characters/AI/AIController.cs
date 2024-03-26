@@ -16,7 +16,7 @@ public class AIController : CharacterSuper
         private GameObject[] _healthitems;
         private bool _canShoot = true, _inBase = true, _enemyinBase = false ,_ismoving, _hasFlag = false;
         private Animator _anim;
-        private float _timer = 2,_shootDistance = 7;
+        private float _timer = 2,_shootDistance = 10;
         
     #endregion
     
@@ -55,7 +55,7 @@ public class AIController : CharacterSuper
     // Update is called once per frame
     void Update()
     {
-
+        Debug.Log(_currentState);
        
         
         
@@ -150,8 +150,7 @@ public class AIController : CharacterSuper
         //sets destination to flag
         _agent.SetDestination(flagR.transform.position);
         setRunningtrue();
-        Debug.Log(DistanceToObject(flagB.transform.position.x, flagB.transform.position.z));
-        if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) <30)
+        if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) <=30 && !GameManager.Instance.blueatBase )
         {
             _previousState = _currentState;
             _currentState = FiniteStateMachine.Capture;
@@ -175,7 +174,7 @@ public class AIController : CharacterSuper
             _agent.SetDestination(flagB.transform.position);
         }
         //if flag is at base or distance is greater than 8 switch to attack
-        if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) > 8 || GameManager.Instance.blueatBase)
+        if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) > 30 || GameManager.Instance.blueatBase)
         {
             if (_currentState != FiniteStateMachine.Attack)
             { 
@@ -327,7 +326,7 @@ public class AIController : CharacterSuper
         private void healthCheck()
         {
             float healthDist;
-            if (Health < MaxHealth/4)
+            if (Health < MaxHealth/2.4f)
             {
                 for (int i = 0; i < _healthitems.Length; i++)
                 {
@@ -386,6 +385,11 @@ public class AIController : CharacterSuper
     {
         Flagdropped?.Invoke(this, EventArgs.Empty);
         gameObject.transform.position = spawn.transform.position;
+        if (_currentState == FiniteStateMachine.Heal || _currentState == FiniteStateMachine.Return)
+        {
+            
+            _currentState = FiniteStateMachine.Attack;
+        }
         Health = MaxHealth;
         
     }
