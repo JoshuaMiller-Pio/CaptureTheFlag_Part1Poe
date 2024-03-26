@@ -156,6 +156,9 @@ private void WinLose()
         SoundManager.Instance.playStart();
         StartGame?.Invoke(this,EventArgs.Empty);
         _paused = false;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         yield return null;
     }
 }

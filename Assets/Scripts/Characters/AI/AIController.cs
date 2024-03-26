@@ -150,8 +150,8 @@ public class AIController : CharacterSuper
         //sets destination to flag
         _agent.SetDestination(flagR.transform.position);
         setRunningtrue();
-        
-        if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) < 8)
+        Debug.Log(DistanceToObject(flagB.transform.position.x, flagB.transform.position.z));
+        if (DistanceToObject(flagB.transform.position.x, flagB.transform.position.z) <30)
         {
             _previousState = _currentState;
             _currentState = FiniteStateMachine.Capture;
@@ -206,7 +206,6 @@ public class AIController : CharacterSuper
                 _currentState = FiniteStateMachine.Attack;
             }
         }
-        Debug.Log(_agent.remainingDistance);
         if (DistanceToPlayer() < _shootDistance)
         {
             Shootcheck();

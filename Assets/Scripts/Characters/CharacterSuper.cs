@@ -40,7 +40,7 @@ public abstract class CharacterSuper : MonoBehaviour
 
     private void Awake()
     {
-        _damage = 30;
+        _damage = 35;
         _health = 100;
     }
 
